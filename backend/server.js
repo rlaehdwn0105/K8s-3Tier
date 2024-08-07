@@ -5,7 +5,13 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    maxAge: 3600,
+    preflightContinue: true,
+  }));
 app.use(express.json());
 
 const db = mysql.createConnection({
@@ -66,7 +72,7 @@ db.connect((err) => {
     }
 });
 
-app.get('/', (re, res) => {
+app.get('/backend', (re, res) => {
     return res.json("From Backend!!!");
 });
 
@@ -100,7 +106,7 @@ const getLastteacherID = () => {
     });
 };
 
-app.get('/student', (req, res) => {
+app.get('/backend/student', (req, res) => {
     const sql = "SELECT * FROM student";
     db.query(sql, (err, data) => {
         if (err) return res.json(err);
@@ -108,7 +114,7 @@ app.get('/student', (req, res) => {
     });
 });
 
-app.get('/teacher', (req, res) => {
+app.get('/backend/teacher', (req, res) => {
     const sql = "SELECT * FROM teacher";
     db.query(sql, (err, data) => {
         if (err) return res.json(err);
@@ -116,7 +122,7 @@ app.get('/teacher', (req, res) => {
     });
 });
 
-app.post('/addstudent', async (req, res) => {
+app.post('/backend/addstudent', async (req, res) => {
     try {
         const lastStudentID = await getLastStudentID();
         const nextStudentID = lastStudentID + 1;
@@ -142,7 +148,7 @@ app.post('/addstudent', async (req, res) => {
     }
 });
 
-app.post('/addteacher', async (req, res) => {
+app.post('/backend/addteacher', async (req, res) => {
     try {
         const lastteacherID = await getLastteacherID();
         const nextteacherID = lastteacherID + 1;
@@ -168,7 +174,7 @@ app.post('/addteacher', async (req, res) => {
     }
 });
 
-app.delete('/student/:id', (req, res) => {
+app.delete('/backend/student/:id', (req, res) => {
     const studentId = req.params.id;
     const sqlDelete = 'DELETE FROM student WHERE id = ?';
     const sqlSelect = 'SELECT id FROM student ORDER BY id';
@@ -214,7 +220,7 @@ app.delete('/student/:id', (req, res) => {
     });
 });
 
-app.delete('/teacher/:id', (req, res) => {
+app.delete('/backend/teacher/:id', (req, res) => {
     const teacherID = req.params.id;
     const sqlDelete = 'DELETE FROM teacher WHERE id = ?';
     const sqlSelect = 'SELECT id FROM teacher ORDER BY id';
