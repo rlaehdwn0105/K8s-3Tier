@@ -117,8 +117,10 @@ app.get('/backend/student', (req, res) => {
 app.get('/backend/teacher', (req, res) => {
     const sql = "SELECT * FROM teacher";
     db.query(sql, (err, data) => {
-        if (err) return res.json(err);
-        return res.json(data);
+        if (err) return res.status(500).json({ error: 'Error fetching teachers' });
+        
+        // Ensure the data returned is always an array
+        return res.json(Array.isArray(data) ? data : []);
     });
 });
 
