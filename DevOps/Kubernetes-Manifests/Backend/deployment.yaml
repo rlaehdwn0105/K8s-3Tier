@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: mern
+  namespace: mrn
   labels:
     role: backend
     env: dev
@@ -24,10 +24,16 @@ spec:
     spec:
       containers:
       - name: backend
-        image: avian19/backend-mern:5
+        image: avian19/backend:1
         imagePullPolicy: Always
         ports:
         - containerPort: 3500
+        livenessProbe:
+          httpGet:
+            path: backend/
+            port: 3500
+          initialDelaySeconds: 3
+          periodSeconds: 10
         env:
         - name: host
           valueFrom:
