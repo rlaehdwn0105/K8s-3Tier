@@ -1,5 +1,5 @@
-# MRN-Stack-Project
-![MRN-Stack-Project](assets/snippet.png)
+# MERN-Stack-Project
+![MERN-Stack-Project](assets/snippet.png)
 Install nodejs, reactjs
 
 https://tecadmin.net/how-to-install-nvm-on-ubuntu-20-04/
