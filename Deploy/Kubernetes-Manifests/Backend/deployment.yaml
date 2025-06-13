@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: mern
+  labels:
+    role: backend
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: backend
+  template:
+    metadata:
+      labels:
+        role: backend
+    spec:
+      imagePullSecrets:
+      - name: myregistrykey  # NCP 레지스트리에 대한 시크릿 이름
+      containers:
+      - name: backend
+        image: dj-kubetest-container.kr.ncr.ntruss.com/backend-image:latest  # 이미지 경로 변경
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3500
+        livenessProbe:
+          httpGet:
+            path: backend/
+            port: 3500
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        env:
+        - name: host
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: host
+        - name: user
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: user
+        - name: password
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password
+        - name: database
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: database
+

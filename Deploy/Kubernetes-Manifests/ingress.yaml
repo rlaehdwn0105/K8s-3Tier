@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mern-ingress
+  namespace: mern
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: kimdongju.site  # 사용할 도메인
+    http:
+      paths:
+      - path: /backend*
+        pathType: Prefix
+        backend:
+          service:
+            name: backend
+            port:
+              number: 3500   # backend 서비스의 포트
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 3000 # frontend 서비스의 포트
+

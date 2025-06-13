@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: mern
+  labels:
+    role: frontend
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: frontend
+  template:
+    metadata:
+      labels:
+        role: frontend
+    spec:
+      imagePullSecrets:
+      - name: myregistrykey  # NCP 레지스트리에 대한 시크릿 이름
+      containers:
+      - name: frontend
+        image: dj-kubetest-container.kr.ncr.ntruss.com/frontend-image:latest  # 이미지 경로
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_API_BASE_URL
+          value: "http://kimdongju.site/backend"  # 도메인 이름
+        - name: NODE_OPTIONS
+          value: "--openssl-legacy-provider"
+
